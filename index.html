@@ -14,7 +14,7 @@
   --gold:#ffd700;--green:#00e676;--cream:#e8d5c4;--dim:#6a5a6a;
 }
 *{margin:0;padding:0;box-sizing:border-box;user-select:none}
-body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospace;height:100vh;width:100vw;overflow:hidden;display:flex;flex-direction:column}
+body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospace;height:100vh;width:100vw;overflow:hidden;overflow:clip;display:flex;flex-direction:column}
 
 /* ── Atmosphere ── */
 .atmo{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 30% 80%,rgba(139,0,0,.07) 0%,transparent 50%),radial-gradient(ellipse at 70% 20%,rgba(80,0,120,.06) 0%,transparent 50%)}
@@ -71,8 +71,53 @@ body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospa
 
 @media(max-width:768px){
   .cs-body.has-img{flex-direction:column}
-  .cs-body.has-img .cs-img-wrap{flex:none;max-width:100%;width:100%;height:auto;max-height:40vh;padding:16px}
-  .cs-body.has-img .cs-text-col{flex:none;max-width:100%;padding:16px 20px;text-align:center}
+  .cs-body.has-img .cs-img-wrap{flex:none;max-width:100%;width:100%;height:auto;max-height:35vh;padding:12px}
+  .cs-body.has-img .cs-text-col{flex:none;max-width:100%;padding:12px 16px;text-align:center}
+  .cs-text{font-size:.9rem !important;line-height:1.7}
+  .cs-label{margin-bottom:12px}
+
+  /* Game screen */
+  #game-screen{padding:6px 8px;gap:3px}
+  .top-bar{gap:4px}
+  .game-title{font-size:1rem}
+  .stats{gap:8px;font-size:.7rem}
+  .toolbar-row{gap:4px}
+  .instr{display:none}
+  .toolbar{gap:4px}
+  .spd input[type="range"]{width:50px}
+  select.preset{font-size:.62rem;padding:4px 6px}
+  .btn{font-size:.7rem;padding:8px 16px;letter-spacing:1px}
+  .btn.sm{font-size:.58rem;padding:5px 10px}
+  .btn-row{gap:5px}
+  .health-label{font-size:.58rem;letter-spacing:1px}
+  .health-val{font-size:.62rem;min-width:36px}
+  .health-status{font-size:.5rem;padding:1px 5px}
+
+  /* Race screen */
+  .race-health{gap:8px}
+  .race-health-col{min-width:140px}
+  .grid-label{font-size:.6rem}
+
+  /* Dustin screens */
+  .dustin-panel{padding:0 12px}
+  .dustin-header{gap:12px;margin-bottom:14px}
+  .dustin-avatar{width:56px;height:56px}
+  .dustin-portrait{width:56px;height:56px}
+  .dustin-name{font-size:1rem}
+  .explain-body{font-size:.85rem !important}
+  .explain-body .code-box{font-size:.68rem;padding:10px 12px;line-height:1.5}
+  .explain-body .key-point{font-size:.68rem;padding:8px 12px}
+
+  /* Results */
+  .res-row{gap:16px}
+  .rc{padding:16px 18px;min-width:140px}
+  .rn{font-size:1.8rem}
+  .quote{padding:12px 16px}
+  .quote em{font-size:.85rem}
+
+  /* Title */
+  .title-main{font-size:clamp(1.8rem,8vw,3rem) !important}
+  .title-sub{font-size:.7rem;margin-bottom:28px}
 }
 
 .dustin-portrait{width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:center 20%}
@@ -117,8 +162,9 @@ body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospa
 .ghost-float{animation:ghostFloat 3s ease-in-out infinite}
 
 /* ── Game layout ── */
-#game-screen{padding:8px 14px;gap:5px}
-.top-bar{width:100%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+#game-screen{padding:8px 14px;gap:4px}
+#game-screen::before,#game-screen::after{display:none}
+.top-bar{width:100%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
 .game-title{font-family:'Creepster',cursive;font-size:1.2rem;color:var(--red);text-shadow:0 0 12px rgba(255,26,26,.3)}
 .mode-tag{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;padding:2px 10px;border-radius:2px}
 .mode-tag.bfs{color:var(--blue);border:1px solid rgba(33,150,243,.3);background:var(--blue-dim)}
@@ -126,7 +172,7 @@ body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospa
 .stats{display:flex;gap:16px;font-size:.78rem}
 .sl{color:var(--dim)}.sv{font-weight:700}.sv.bc{color:var(--blue)}.sv.ac{color:var(--purple)}
 
-.toolbar-row{width:100%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.toolbar-row{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .instr{font-size:.65rem;color:var(--dim);letter-spacing:.5px}
 .instr .k{display:inline-block;padding:1px 5px;border:1px solid rgba(255,255,255,.1);border-radius:2px;color:var(--cream);font-size:.62rem;background:rgba(255,255,255,.03);margin:0 2px}
 .toolbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
@@ -136,7 +182,7 @@ select.preset{font-family:'Courier Prime',monospace;font-size:.7rem;background:r
 select.preset option{background:#1a0a12;color:var(--cream)}
 
 /* ── Health bar ── */
-.health-row{width:100%;max-width:1100px;display:flex;align-items:center;gap:8px}
+.health-row{width:100%;display:flex;align-items:center;gap:8px}
 .health-label{font-size:.68rem;letter-spacing:2px;text-transform:uppercase;white-space:nowrap}
 .health-label.alive{color:var(--green)}
 .health-label.dead{color:var(--red)}
@@ -155,15 +201,15 @@ select.preset option{background:#1a0a12;color:var(--cream)}
 .health-status.lost{color:#ff1744;border:1px solid rgba(255,23,68,.3);background:rgba(255,23,68,.08);animation:pulseDead 1s infinite}
 @keyframes pulseDead{0%,100%{opacity:1}50%{opacity:.5}}
 
-.grid-area{display:flex;gap:20px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
-.grid-box{position:relative}
+.grid-area{display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap;flex:1;width:100%}
+.grid-box{position:relative;display:flex;align-items:center;justify-content:center}
 .grid-label{text-align:center;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
 .grid-label.bl{color:var(--blue)}.grid-label.al{color:var(--purple)}
-canvas{display:block;border:1px solid rgba(139,0,0,.2);box-shadow:0 0 25px rgba(139,0,0,.07),inset 0 0 15px rgba(0,0,0,.35);cursor:crosshair;image-rendering:pixelated}
+canvas{display:block;border:1px solid rgba(139,0,0,.2);box-shadow:0 0 25px rgba(139,0,0,.07),inset 0 0 15px rgba(0,0,0,.35);cursor:crosshair;image-rendering:pixelated;max-width:100%}
 .btn-row{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;justify-content:center}
 
 /* ── Race health bars ── */
-.race-health{width:100%;max-width:1100px;display:flex;gap:24px;flex-wrap:wrap}
+.race-health{width:100%;display:flex;gap:24px;flex-wrap:wrap}
 .race-health-col{flex:1;min-width:200px}
 .race-health-col .health-row{width:100%}
 
@@ -363,6 +409,7 @@ const COLS=40, ROWS=25, CELL=22, W=COLS*CELL, H=ROWS*CELL;
 let grid=[], sPos={r:20,c:3}, ePos={r:3,c:36};
 let vis=null, expCells=[], pathCells=[], lastType=null;
 let animId=null, story=false, csIdx=0, racing=false;
+let curGVals=null, curHFn=null, curOpenedAt=null;
 
 // Story state
 let storyBfsExp=0, storyBfsPath=0;
@@ -445,7 +492,7 @@ function loadPreset(name){
 }
 
 function clearWalls(){loadPreset('empty');}
-function clearVis(){stopAnim();vis=null;expCells=[];pathCells=[];updStats(0,'—');resetHealth('h');redraw();}
+function clearVis(){stopAnim();vis=null;expCells=[];pathCells=[];curGVals=null;curHFn=null;curOpenedAt=null;updStats(0,'—');resetHealth('h');redraw();}
 
 // ═══════════════════════════════════════
 //  HEALTH BAR SYSTEM
@@ -496,7 +543,7 @@ function resetHealth(prefix){
 // ═══════════════════════════════════════
 //  DRAW
 // ═══════════════════════════════════════
-function drawOn(ctx,cW,cH,explored,path,type,aIdx){
+function drawOn(ctx,cW,cH,explored,path,type,aIdx,gVals,hFn,openedAt){
   const sx=cW/W,sy=cH/H;
   ctx.setTransform(sx,0,0,sy,0,0);
   ctx.fillStyle='#080310';ctx.fillRect(0,0,W,H);
@@ -516,11 +563,56 @@ function drawOn(ctx,cW,cH,explored,path,type,aIdx){
 
   const isA=type==='astar',ec=isA?'206,106,255':'33,150,243';
   const lim=aIdx!==undefined?aIdx:explored.length;
+
+  const exploredSet=new Set();
+  for(let i=0;i<Math.min(lim,explored.length);i++) exploredSet.add(explored[i].r*COLS+explored[i].c);
+
+  if(isA&&openedAt&&gVals&&hFn){
+    const curStep=lim-1;
+    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+      if(openedAt[r][c]>=0&&openedAt[r][c]<=curStep&&!exploredSet.has(r*COLS+c)&&gVals[r][c]!==Infinity){
+        const x=c*CELL,y=r*CELL;
+        ctx.fillStyle='rgba(206,106,255,0.06)';ctx.fillRect(x+1,y+1,CELL-2,CELL-2);
+        ctx.strokeStyle='rgba(206,106,255,0.15)';ctx.lineWidth=0.5;ctx.strokeRect(x+1,y+1,CELL-2,CELL-2);
+      }
+    }
+  }
+
   for(let i=0;i<Math.min(lim,explored.length);i++){
     const{r,c}=explored[i],x=c*CELL,y=r*CELL;
     const a=.1+.28*(i/Math.max(explored.length,1));
     ctx.fillStyle=`rgba(${ec},${a.toFixed(2)})`;ctx.fillRect(x+1,y+1,CELL-2,CELL-2);
     if(aIdx!==undefined&&i>=lim-3){ctx.fillStyle=`rgba(${ec},0.4)`;ctx.fillRect(x+1,y+1,CELL-2,CELL-2);}
+  }
+
+  if(gVals&&hFn&&isA){
+    ctx.textBaseline='top';
+    const curStep=lim-1;
+    if(openedAt){
+      for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+        if(openedAt[r][c]>=0&&openedAt[r][c]<=curStep&&!exploredSet.has(r*COLS+c)&&gVals[r][c]!==Infinity){
+          const x=c*CELL,y=r*CELL,gv=gVals[r][c],hv=hFn(r,c),fv=gv+hv;
+          ctx.font='bold 6px monospace';ctx.fillStyle='rgba(206,106,255,0.3)';
+          ctx.textAlign='left';ctx.fillText(gv,x+2,y+1);
+          ctx.textAlign='right';ctx.fillText(hv,x+CELL-2,y+1);
+          ctx.font='bold 8px monospace';ctx.fillStyle='rgba(255,215,0,0.35)';
+          ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(fv,x+CELL/2,y+CELL/2+1);
+          ctx.textBaseline='top';
+        }
+      }
+    }
+    const numColor='rgba(206,106,255,0.7)',fColor='rgba(255,215,0,0.85)';
+    for(let i=0;i<Math.min(lim,explored.length);i++){
+      const{r,c}=explored[i],x=c*CELL,y=r*CELL,gv=gVals[r][c];
+      if(gv===Infinity)continue;
+      const hv=hFn(r,c),fv=gv+hv;
+      ctx.font='bold 6px monospace';ctx.fillStyle=numColor;
+      ctx.textAlign='left';ctx.fillText(gv,x+2,y+1);
+      ctx.textAlign='right';ctx.fillText(hv,x+CELL-2,y+1);
+      ctx.font='bold 8px monospace';ctx.fillStyle=fColor;
+      ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(fv,x+CELL/2,y+CELL/2+1);
+      ctx.textBaseline='top';
+    }
   }
 
   if(path&&path.length&&(aIdx===undefined||aIdx>=explored.length)){
@@ -530,13 +622,12 @@ function drawOn(ctx,cW,cH,explored,path,type,aIdx){
     ctx.shadowBlur=0;
   }
 
-  // Start node
   ctx.fillStyle='#00e676';ctx.shadowColor='#00e676';ctx.shadowBlur=14;
   ctx.beginPath();ctx.arc(sPos.c*CELL+CELL/2,sPos.r*CELL+CELL/2,CELL/2.5,0,Math.PI*2);ctx.fill();
   ctx.shadowBlur=0;ctx.font='bold 8px monospace';ctx.fillStyle='#00e676';
+  ctx.textAlign='left';ctx.textBaseline='top';
   ctx.fillText('START',sPos.c*CELL,sPos.r*CELL-3);
 
-  // End node
   ctx.fillStyle='#ffd700';ctx.shadowColor='#ffd700';ctx.shadowBlur=14;
   ctx.beginPath();ctx.arc(ePos.c*CELL+CELL/2,ePos.r*CELL+CELL/2,CELL/2.5,0,Math.PI*2);ctx.fill();
   ctx.shadowBlur=0;ctx.font='bold 8px monospace';ctx.fillStyle='#ffd700';
@@ -548,7 +639,7 @@ function drawOn(ctx,cW,cH,explored,path,type,aIdx){
 function redraw(){
   const cv=document.getElementById('cv');
   if(!cv)return;
-  drawOn(cv.getContext('2d'),cv.width,cv.height,expCells,pathCells,lastType);
+  drawOn(cv.getContext('2d'),cv.width,cv.height,expCells,pathCells,lastType,undefined,curGVals,curHFn,curOpenedAt);
 }
 
 // ═══════════════════════════════════════
@@ -567,7 +658,8 @@ function cellAt(e,cv){
 }
 
 function initCanvas(cv){
-  cv.width=W;cv.height=H;sizeCanvas(cv);
+  cv.width=W;cv.height=H;
+  requestAnimationFrame(()=>sizeCanvas(cv));
 
   cv.onmousedown=e=>{
     if(vis==='run')return;e.preventDefault();
@@ -610,9 +702,14 @@ function initCanvas(cv){
 }
 
 function sizeCanvas(cv){
-  const maxW=Math.min(window.innerWidth-32,920);
-  cv.style.width=maxW+'px';
-  cv.style.height=Math.floor(maxW*(H/W))+'px';
+  const gridArea=cv.closest('.grid-area')||cv.parentElement;
+  const availW=gridArea.clientWidth-16;
+  const availH=gridArea.clientHeight-16;
+  const aspect=H/W;
+  let w=availW;let h=w*aspect;
+  if(h>availH){h=availH;w=h/aspect;}
+  cv.style.width=Math.floor(w)+'px';
+  cv.style.height=Math.floor(h)+'px';
 }
 
 // ═══════════════════════════════════════
@@ -623,20 +720,22 @@ const DIRS=[[0,1],[0,-1],[1,0],[-1,0]];
 function doBFS(){
   const exp=[],visited=Array.from({length:ROWS},()=>Array(COLS).fill(false));
   const par=Array.from({length:ROWS},()=>Array(COLS).fill(null));
-  const q=[{r:sPos.r,c:sPos.c}];visited[sPos.r][sPos.c]=true;
+  const gVals=Array.from({length:ROWS},()=>Array(COLS).fill(-1));
+  const hFn=(r,c)=>Math.abs(r-ePos.r)+Math.abs(c-ePos.c);
+  const q=[{r:sPos.r,c:sPos.c}];visited[sPos.r][sPos.c]=true;gVals[sPos.r][sPos.c]=0;
   while(q.length){
     const u=q.shift();exp.push(u);
     if(u.r===ePos.r&&u.c===ePos.c)break;
     for(const[dr,dc]of DIRS){const nr=u.r+dr,nc=u.c+dc;
       if(nr>=0&&nr<ROWS&&nc>=0&&nc<COLS&&!visited[nr][nc]&&grid[nr][nc]===0){
-        visited[nr][nc]=true;par[nr][nc]={r:u.r,c:u.c};q.push({r:nr,c:nc});}}
+        visited[nr][nc]=true;par[nr][nc]={r:u.r,c:u.c};gVals[nr][nc]=gVals[u.r][u.c]+1;q.push({r:nr,c:nc});}}
   }
   const path=[];
-  if(!visited[ePos.r][ePos.c])return{explored:exp,path:[]};
+  if(!visited[ePos.r][ePos.c])return{explored:exp,path:[],gVals,hFn};
   let u={r:ePos.r,c:ePos.c};
   while(u&&!(u.r===sPos.r&&u.c===sPos.c)){path.unshift(u);u=par[u.r][u.c];}
   path.unshift({r:sPos.r,c:sPos.c});
-  return{explored:exp,path};
+  return{explored:exp,path,gVals,hFn};
 }
 
 // Min-heap for A* open list (matches PathFinding.js behavior)
@@ -654,8 +753,10 @@ function doAStar(){
   const f=Array.from({length:ROWS},()=>Array(COLS).fill(Infinity));
   const par=Array.from({length:ROWS},()=>Array(COLS).fill(null));
   const cl=Array.from({length:ROWS},()=>Array(COLS).fill(false));
-  const h=(r,c)=>Math.abs(r-ePos.r)+Math.abs(c-ePos.c);
-  g[sPos.r][sPos.c]=0;f[sPos.r][sPos.c]=h(sPos.r,sPos.c);
+  const openedAt=Array.from({length:ROWS},()=>Array(COLS).fill(-1));
+  const hFn=(r,c)=>Math.abs(r-ePos.r)+Math.abs(c-ePos.c);
+  g[sPos.r][sPos.c]=0;f[sPos.r][sPos.c]=hFn(sPos.r,sPos.c);
+  openedAt[sPos.r][sPos.c]=0;
   const open=new MinHeap((a,b)=>a.f-b.f);
   open.push({r:sPos.r,c:sPos.c,f:f[sPos.r][sPos.c]});
   while(open.length){
@@ -665,14 +766,16 @@ function doAStar(){
     for(const[dr,dc]of DIRS){const nr=u.r+dr,nc=u.c+dc;
       if(nr>=0&&nr<ROWS&&nc>=0&&nc<COLS&&!cl[nr][nc]&&grid[nr][nc]===0){
         const tg=g[u.r][u.c]+1;
-        if(tg<g[nr][nc]){g[nr][nc]=tg;f[nr][nc]=tg+h(nr,nc);par[nr][nc]={r:u.r,c:u.c};open.push({r:nr,c:nc,f:f[nr][nc]});}}}
+        if(tg<g[nr][nc]){g[nr][nc]=tg;f[nr][nc]=tg+hFn(nr,nc);par[nr][nc]={r:u.r,c:u.c};
+          openedAt[nr][nc]=exp.length-1;
+          open.push({r:nr,c:nc,f:f[nr][nc]});}}}
   }
   const path=[];
-  if(!cl[ePos.r][ePos.c])return{explored:exp,path:[]};
+  if(!cl[ePos.r][ePos.c])return{explored:exp,path:[],gVals:g,hFn,openedAt};
   let u={r:ePos.r,c:ePos.c};
   while(u&&!(u.r===sPos.r&&u.c===sPos.c)){path.unshift(u);u=par[u.r][u.c];}
   path.unshift({r:sPos.r,c:sPos.c});
-  return{explored:exp,path};
+  return{explored:exp,path,gVals:g,hFn,openedAt};
 }
 
 // ═══════════════════════════════════════
@@ -687,28 +790,34 @@ function updStats(e,p){
 
 function animate(ctx,cW,cH,explored,path,type,opts){
   stopAnim();vis='run';let idx=0;lastType=type;
-  const{healthPrefix,drainRate,onDone,spdId}=opts;
+  const{healthPrefix,drainRate,onDone,spdId,gVals,hFn,openedAt}=opts;
+  curGVals=gVals||null;curHFn=hFn||null;curOpenedAt=openedAt||null;
   let dead=false;
+  let lastTime=performance.now(),accum=0;
 
-  function step(){
+  function step(now){
     const spd=parseInt(document.getElementById(spdId||'spd').value);
-    const batch=Math.max(1,Math.floor(spd/2));
-    idx=Math.min(idx+batch,explored.length);
+    const dt=now-lastTime;lastTime=now;
+    const cps=spd<=1?1:spd*10;
+    accum+=dt*cps/1000;
+    const advance=Math.floor(accum);
+    if(advance>0){
+      accum-=advance;
+      idx=Math.min(idx+advance,explored.length);
 
-    drawOn(ctx,cW,cH,explored,idx>=explored.length?path:null,type,idx);
-    updStats(idx,idx>=explored.length?path.length:'—');
+      drawOn(ctx,cW,cH,explored,idx>=explored.length?path:null,type,idx,gVals,hFn,openedAt);
+      updStats(idx,idx>=explored.length?path.length:'—');
 
-    // Health drain
-    if(healthPrefix&&drainRate){
-      const hp=Math.max(0,100-idx*drainRate);
-      if(hp<=0&&!dead){dead=true;setHealth(healthPrefix,0,true);}
-      else if(!dead){setHealth(healthPrefix,hp,false);}
+      if(healthPrefix&&drainRate){
+        const hp=Math.max(0,100-idx*drainRate);
+        if(hp<=0&&!dead){dead=true;setHealth(healthPrefix,0,true);}
+        else if(!dead){setHealth(healthPrefix,hp,false);}
+      }
     }
 
     if(idx<explored.length){animId=requestAnimationFrame(step);}
     else{
       vis='done';expCells=explored;pathCells=path;
-      // Final health state
       if(healthPrefix&&drainRate){
         const finalHp=Math.max(0,100-explored.length*drainRate);
         if(finalHp<=0){setHealth(healthPrefix,0,true);}
@@ -717,7 +826,7 @@ function animate(ctx,cW,cH,explored,path,type,opts){
       if(onDone)setTimeout(onDone,900);
     }
   }
-  step();
+  animId=requestAnimationFrame(step);
 }
 
 // ═══════════════════════════════════════
@@ -753,6 +862,9 @@ function runSingle(type){
     healthPrefix:'h',
     drainRate:drain,
     spdId:'spd',
+    gVals:res.gVals,
+    hFn:res.hFn,
+    openedAt:res.openedAt,
     onDone:()=>{
       if(story){
         if(type==='bfs'){
@@ -800,14 +912,20 @@ function runRace(){
   const cvB=document.getElementById('cv-bfs'),cvA=document.getElementById('cv-astar');
   const ctxB=cvB.getContext('2d'),ctxA=cvA.getContext('2d');
   vis='run';
+  let lastTime=performance.now(),accum=0;
 
-  function step(){
+  function step(now){
     const spd=parseInt(document.getElementById('spd-r').value);
-    const batch=Math.max(1,Math.floor(spd/2));
+    const dt=now-lastTime;lastTime=now;
+    const cps=spd<=1?1:spd*10;
+    accum+=dt*cps/1000;
+    const advance=Math.floor(accum);
+    if(advance<=0){animId=requestAnimationFrame(step);return;}
+    accum-=advance;
 
     if(!bd){
-      bi=Math.min(bi+batch,bR.explored.length);
-      drawOn(ctxB,cvB.width,cvB.height,bR.explored,bi>=bR.explored.length?bR.path:null,'bfs',bi);
+      bi=Math.min(bi+advance,bR.explored.length);
+      drawOn(ctxB,cvB.width,cvB.height,bR.explored,bi>=bR.explored.length?bR.path:null,'bfs',bi,bR.gVals,bR.hFn,null);
       document.getElementById('r-bfs').textContent=bi;
       const bhp=Math.max(0,100-bi*drain);
       if(bhp<=0&&!bDead){bDead=true;setHealth('rh-bfs',0,true);}
@@ -815,8 +933,8 @@ function runRace(){
       if(bi>=bR.explored.length){bd=true;if(!bDead)setHealth('rh-bfs',Math.max(0,100-bR.explored.length*drain),false);}
     }
     if(!ad){
-      ai=Math.min(ai+batch,aR.explored.length);
-      drawOn(ctxA,cvA.width,cvA.height,aR.explored,ai>=aR.explored.length?aR.path:null,'astar',ai);
+      ai=Math.min(ai+advance,aR.explored.length);
+      drawOn(ctxA,cvA.width,cvA.height,aR.explored,ai>=aR.explored.length?aR.path:null,'astar',ai,aR.gVals,aR.hFn,aR.openedAt);
       document.getElementById('r-astar').textContent=ai;
       const ahp=Math.max(0,100-ai*drain);
       if(ahp<=0&&!aDead){aDead=true;setHealth('rh-astar',0,true);}
@@ -836,7 +954,7 @@ function runRace(){
       setTimeout(()=>showResults(bR.explored.length,aR.explored.length,bR.path.length,aR.path.length,bfsHp,astarHp),1500);
     }
   }
-  stopAnim();step();
+  stopAnim();animId=requestAnimationFrame(step);
 }
 
 function backFromRace(){stopAnim();racing=false;vis=null;showScr('game-screen');redraw();}
