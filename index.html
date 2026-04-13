@@ -70,9 +70,11 @@ body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospa
 .cs-img.glow-gold{box-shadow:0 8px 40px rgba(255,215,0,.35),0 0 80px rgba(255,215,0,.12)}
 
 @media(max-width:768px){
+  .cs-body{overflow-y:auto;flex:1 1 0;align-items:flex-start}
   .cs-body.has-img{flex-direction:column}
   .cs-body.has-img .cs-img-wrap{flex:none;max-width:100%;width:100%;height:auto;max-height:35vh;padding:12px}
   .cs-body.has-img .cs-text-col{flex:none;max-width:100%;padding:12px 16px;text-align:center}
+  .cs-body:not(.has-img) .cs-text-col{max-width:100%;padding:16px}
   .cs-text{font-size:.9rem !important;line-height:1.7}
   .cs-label{margin-bottom:12px}
 
@@ -99,6 +101,7 @@ body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospa
   .grid-label{font-size:.6rem}
 
   /* Dustin screens */
+  .dustin-screen::before,.dustin-screen::after{flex:0;min-height:0}
   .dustin-panel{padding:0 12px}
   .dustin-header{gap:12px;margin-bottom:14px}
   .dustin-avatar{width:56px;height:56px}
@@ -118,6 +121,9 @@ body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospa
   /* Title */
   .title-main{font-size:clamp(1.8rem,8vw,3rem) !important}
   .title-sub{font-size:.7rem;margin-bottom:28px}
+
+  /* Let screens scroll instead of clipping */
+  .screen::before,.screen::after{flex:0 0 auto;min-height:12px}
 }
 
 .dustin-portrait{width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:center 20%}
