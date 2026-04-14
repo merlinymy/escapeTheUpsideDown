@@ -56,8 +56,9 @@ body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospa
 .cs-text .g{color:var(--gold);text-shadow:0 0 8px rgba(255,215,0,.3)}
 .cs-text .dead{color:#ff4444;text-shadow:0 0 12px rgba(255,0,0,.5);font-weight:bold}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.cs-next{margin-top:24px;font-size:.75rem;color:var(--dim);letter-spacing:2px;cursor:pointer;animation:pulse 2s infinite}
-.cs-next:hover{color:var(--red)}
+.cs-nav{display:flex;gap:32px;align-items:center;justify-content:center;margin-top:24px;position:relative;z-index:2}
+.cs-next,.cs-back{font-size:.75rem;color:var(--dim);letter-spacing:2px;cursor:pointer;animation:pulse 2s infinite}
+.cs-next:hover,.cs-back:hover{color:var(--red)}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
 
 /* ── Chapter images ── */
@@ -161,8 +162,9 @@ body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospa
 .explain-body .key-point.bfs-point{background:rgba(33,150,243,.06);border:1px solid rgba(33,150,243,.15)}
 .explain-body .key-point.astar-point{background:rgba(206,106,255,.06);border:1px solid rgba(206,106,255,.15)}
 
-.dustin-next{margin-top:28px;text-align:center;font-size:.75rem;color:var(--dim);letter-spacing:2px;cursor:pointer;animation:pulse 2s infinite}
-.dustin-next:hover{color:var(--red)}
+.dustin-nav{display:flex;gap:32px;align-items:center;justify-content:center;margin-top:28px}
+.dustin-next,.dustin-back{font-size:.75rem;color:var(--dim);letter-spacing:2px;cursor:pointer;animation:pulse 2s infinite}
+.dustin-next:hover,.dustin-back:hover{color:var(--red)}
 
 @keyframes ghostFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .ghost-float{animation:ghostFloat 3s ease-in-out infinite}
@@ -259,7 +261,10 @@ canvas{display:block;border:1px solid rgba(139,0,0,.2);box-shadow:0 0 25px rgba(
     <div class="cs-img-wrap" id="cs-img-wrap"></div>
     <div class="cs-text-col">
       <div class="cs-text" id="cs-text"></div>
-      <div class="cs-next" onclick="csNext()">[ Press to continue ]</div>
+      <div class="cs-nav">
+        <div class="cs-back" id="cs-back" onclick="csBack()">◂ Back</div>
+        <div class="cs-next" onclick="csNext()">Next ▸</div>
+      </div>
     </div>
   </div>
 </div>
@@ -275,7 +280,10 @@ canvas{display:block;border:1px solid rgba(139,0,0,.2);box-shadow:0 0 25px rgba(
       </div>
     </div>
     <div class="explain-body" id="ghost-dustin-text"></div>
-    <div class="dustin-next" onclick="csNext()">[ Press to continue ]</div>
+    <div class="dustin-nav">
+      <div class="dustin-back" onclick="csBack()">◂ Back</div>
+      <div class="dustin-next" onclick="csNext()">Next ▸</div>
+    </div>
   </div>
 </div>
 
@@ -290,7 +298,10 @@ canvas{display:block;border:1px solid rgba(139,0,0,.2);box-shadow:0 0 25px rgba(
       </div>
     </div>
     <div class="explain-body" id="alive-dustin-text"></div>
-    <div class="dustin-next" onclick="csNext()">[ Press to continue ]</div>
+    <div class="dustin-nav">
+      <div class="dustin-back" onclick="csBack()">◂ Back</div>
+      <div class="dustin-next" onclick="csNext()">Next ▸</div>
+    </div>
   </div>
 </div>
 
@@ -320,6 +331,7 @@ canvas{display:block;border:1px solid rgba(139,0,0,.2);box-shadow:0 0 25px rgba(
       </select>
       <button class="btn sm" onclick="clearWalls()">Clear Walls</button>
       <button class="btn sm" onclick="clearVis()">Clear Search</button>
+      <button class="btn sm" id="btn-light" onclick="toggleLight()">Light Mode</button>
       <div class="spd"><span>Speed</span><input type="range" id="spd" min="1" max="30" value="1"></div>
     </div>
   </div>
@@ -334,6 +346,7 @@ canvas{display:block;border:1px solid rgba(139,0,0,.2);box-shadow:0 0 25px rgba(
 
   <div class="grid-area"><div class="grid-box"><canvas id="cv"></canvas></div></div>
   <div class="btn-row">
+    <button class="btn sm" id="btn-sback" style="display:none" onclick="csBack()">◂ Back</button>
     <button class="btn bl" id="btn-bfs" onclick="runSingle('bfs')">Run BFS</button>
     <button class="btn pu" id="btn-astar" onclick="runSingle('astar')">Run A*</button>
     <button class="btn go" id="btn-race" onclick="goRace()">Race Side-by-Side</button>
@@ -416,6 +429,7 @@ let grid=[], sPos={r:20,c:3}, ePos={r:3,c:36};
 let vis=null, expCells=[], pathCells=[], lastType=null;
 let animId=null, story=false, csIdx=0, racing=false;
 let curGVals=null, curHFn=null, curOpenedAt=null;
+let lightMode=false;
 
 // Story state
 let storyBfsExp=0, storyBfsPath=0;
@@ -499,6 +513,7 @@ function loadPreset(name){
 
 function clearWalls(){loadPreset('empty');}
 function clearVis(){stopAnim();vis=null;expCells=[];pathCells=[];curGVals=null;curHFn=null;curOpenedAt=null;updStats(0,'—');resetHealth('h');redraw();}
+function toggleLight(){lightMode=!lightMode;document.getElementById('btn-light').textContent=lightMode?'Dark Mode':'Light Mode';redraw();}
 
 // ═══════════════════════════════════════
 //  HEALTH BAR SYSTEM
@@ -550,20 +565,33 @@ function resetHealth(prefix){
 //  DRAW
 // ═══════════════════════════════════════
 function drawOn(ctx,cW,cH,explored,path,type,aIdx,gVals,hFn,openedAt){
+  const lt=lightMode;
   const sx=cW/W,sy=cH/H;
   ctx.setTransform(sx,0,0,sy,0,0);
-  ctx.fillStyle='#080310';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle=lt?'#f0ece4':'#080310';ctx.fillRect(0,0,W,H);
 
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
     const x=c*CELL,y=r*CELL;
     if(grid[r][c]===1){
-      ctx.fillStyle='#1a0610';ctx.fillRect(x,y,CELL,CELL);
-      ctx.fillStyle='rgba(80,15,25,0.4)';ctx.fillRect(x+2,y+2,CELL-4,CELL-4);
-      ctx.strokeStyle='rgba(139,0,0,0.18)';ctx.lineWidth=.5;
-      ctx.beginPath();ctx.moveTo(x+3,y+3);ctx.lineTo(x+CELL-3,y+CELL-3);ctx.stroke();
+      if(lt){
+        ctx.fillStyle='#3a2a2e';ctx.fillRect(x,y,CELL,CELL);
+        ctx.fillStyle='rgba(60,30,35,0.6)';ctx.fillRect(x+2,y+2,CELL-4,CELL-4);
+        ctx.strokeStyle='rgba(80,40,50,0.4)';ctx.lineWidth=.5;
+        ctx.beginPath();ctx.moveTo(x+3,y+3);ctx.lineTo(x+CELL-3,y+CELL-3);ctx.stroke();
+      } else {
+        ctx.fillStyle='#1a0610';ctx.fillRect(x,y,CELL,CELL);
+        ctx.fillStyle='rgba(80,15,25,0.4)';ctx.fillRect(x+2,y+2,CELL-4,CELL-4);
+        ctx.strokeStyle='rgba(139,0,0,0.18)';ctx.lineWidth=.5;
+        ctx.beginPath();ctx.moveTo(x+3,y+3);ctx.lineTo(x+CELL-3,y+CELL-3);ctx.stroke();
+      }
     } else {
-      ctx.fillStyle='#0a0410';ctx.fillRect(x,y,CELL,CELL);
-      ctx.strokeStyle='rgba(139,0,0,0.04)';ctx.lineWidth=.3;ctx.strokeRect(x,y,CELL,CELL);
+      if(lt){
+        ctx.fillStyle='#e8e2d8';ctx.fillRect(x,y,CELL,CELL);
+        ctx.strokeStyle='rgba(0,0,0,0.1)';ctx.lineWidth=.3;ctx.strokeRect(x,y,CELL,CELL);
+      } else {
+        ctx.fillStyle='#0a0410';ctx.fillRect(x,y,CELL,CELL);
+        ctx.strokeStyle='rgba(139,0,0,0.04)';ctx.lineWidth=.3;ctx.strokeRect(x,y,CELL,CELL);
+      }
     }
   }
 
@@ -578,17 +606,17 @@ function drawOn(ctx,cW,cH,explored,path,type,aIdx,gVals,hFn,openedAt){
     for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
       if(openedAt[r][c]>=0&&openedAt[r][c]<=curStep&&!exploredSet.has(r*COLS+c)&&(isA?gVals[r][c]!==Infinity:gVals[r][c]>=0)){
         const x=c*CELL,y=r*CELL;
-        ctx.fillStyle=`rgba(${ec},0.06)`;ctx.fillRect(x+1,y+1,CELL-2,CELL-2);
-        ctx.strokeStyle=`rgba(${ec},0.15)`;ctx.lineWidth=0.5;ctx.strokeRect(x+1,y+1,CELL-2,CELL-2);
+        ctx.fillStyle=`rgba(${ec},${lt?0.12:0.06})`;ctx.fillRect(x+1,y+1,CELL-2,CELL-2);
+        ctx.strokeStyle=`rgba(${ec},${lt?0.3:0.15})`;ctx.lineWidth=0.5;ctx.strokeRect(x+1,y+1,CELL-2,CELL-2);
       }
     }
   }
 
   for(let i=0;i<Math.min(lim,explored.length);i++){
     const{r,c}=explored[i],x=c*CELL,y=r*CELL;
-    const a=.1+.28*(i/Math.max(explored.length,1));
+    const a=lt?.18+.32*(i/Math.max(explored.length,1)):.1+.28*(i/Math.max(explored.length,1));
     ctx.fillStyle=`rgba(${ec},${a.toFixed(2)})`;ctx.fillRect(x+1,y+1,CELL-2,CELL-2);
-    if(aIdx!==undefined&&i>=lim-3){ctx.fillStyle=`rgba(${ec},0.4)`;ctx.fillRect(x+1,y+1,CELL-2,CELL-2);}
+    if(aIdx!==undefined&&i>=lim-3){ctx.fillStyle=`rgba(${ec},${lt?0.55:0.4})`;ctx.fillRect(x+1,y+1,CELL-2,CELL-2);}
   }
 
   if(gVals&&hFn&&isA){
@@ -598,16 +626,16 @@ function drawOn(ctx,cW,cH,explored,path,type,aIdx,gVals,hFn,openedAt){
       for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
         if(openedAt[r][c]>=0&&openedAt[r][c]<=curStep&&!exploredSet.has(r*COLS+c)&&gVals[r][c]!==Infinity){
           const x=c*CELL,y=r*CELL,gv=gVals[r][c],hv=hFn(r,c),fv=gv+hv;
-          ctx.font='bold 6px monospace';ctx.fillStyle='rgba(206,106,255,0.3)';
+          ctx.font='bold 6px monospace';ctx.fillStyle=lt?'rgba(140,60,200,0.5)':'rgba(206,106,255,0.3)';
           ctx.textAlign='left';ctx.fillText(gv,x+2,y+1);
           ctx.textAlign='right';ctx.fillText(hv,x+CELL-2,y+1);
-          ctx.font='bold 8px monospace';ctx.fillStyle='rgba(255,215,0,0.35)';
+          ctx.font='bold 8px monospace';ctx.fillStyle=lt?'rgba(180,140,0,0.6)':'rgba(255,215,0,0.35)';
           ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(fv,x+CELL/2,y+CELL/2+1);
           ctx.textBaseline='top';
         }
       }
     }
-    const numColor='rgba(206,106,255,0.7)',fColor='rgba(255,215,0,0.85)';
+    const numColor=lt?'rgba(140,60,200,0.85)':'rgba(206,106,255,0.7)',fColor=lt?'rgba(160,120,0,0.95)':'rgba(255,215,0,0.85)';
     for(let i=0;i<Math.min(lim,explored.length);i++){
       const{r,c}=explored[i],x=c*CELL,y=r*CELL,gv=gVals[r][c];
       if(gv===Infinity)continue;
@@ -623,20 +651,21 @@ function drawOn(ctx,cW,cH,explored,path,type,aIdx,gVals,hFn,openedAt){
 
   if(path&&path.length&&(aIdx===undefined||aIdx>=explored.length)){
     const pc=isA?'#ce6aff':'#2196f3';
-    ctx.shadowColor=pc;ctx.shadowBlur=10;
+    ctx.shadowColor=pc;ctx.shadowBlur=lt?6:10;
     path.forEach(({r,c})=>{ctx.fillStyle=pc;ctx.fillRect(c*CELL+3,r*CELL+3,CELL-6,CELL-6);});
     ctx.shadowBlur=0;
   }
 
-  ctx.fillStyle='#00e676';ctx.shadowColor='#00e676';ctx.shadowBlur=14;
+  const startFill=lt?'#009e50':'#00e676',endFill=lt?'#c5a000':'#ffd700';
+  ctx.fillStyle=startFill;ctx.shadowColor=startFill;ctx.shadowBlur=lt?8:14;
   ctx.beginPath();ctx.arc(sPos.c*CELL+CELL/2,sPos.r*CELL+CELL/2,CELL/2.5,0,Math.PI*2);ctx.fill();
-  ctx.shadowBlur=0;ctx.font='bold 8px monospace';ctx.fillStyle='#00e676';
+  ctx.shadowBlur=0;ctx.font='bold 8px monospace';ctx.fillStyle=startFill;
   ctx.textAlign='left';ctx.textBaseline='top';
   ctx.fillText('START',sPos.c*CELL,sPos.r*CELL-3);
 
-  ctx.fillStyle='#ffd700';ctx.shadowColor='#ffd700';ctx.shadowBlur=14;
+  ctx.fillStyle=endFill;ctx.shadowColor=endFill;ctx.shadowBlur=lt?8:14;
   ctx.beginPath();ctx.arc(ePos.c*CELL+CELL/2,ePos.r*CELL+CELL/2,CELL/2.5,0,Math.PI*2);ctx.fill();
-  ctx.shadowBlur=0;ctx.font='bold 8px monospace';ctx.fillStyle='#ffd700';
+  ctx.shadowBlur=0;ctx.font='bold 8px monospace';ctx.fillStyle=endFill;
   ctx.fillText('DUSTIN',ePos.c*CELL-2,ePos.r*CELL-3);
 
   ctx.setTransform(1,0,0,1,0,0);
@@ -1008,6 +1037,7 @@ function beginSandbox(){
   story=false;stopAnim();vis=null;expCells=[];pathCells=[];racing=false;
   document.getElementById('g-title').textContent='Sandbox';
   document.getElementById('btn-snext').style.display='none';
+  document.getElementById('btn-sback').style.display='none';
   document.getElementById('health-row').style.display='flex';
   ['btn-bfs','btn-astar','btn-race'].forEach(id=>document.getElementById(id).style.display='');
   showScr('game-screen');
@@ -1230,6 +1260,7 @@ function csNext(){
     document.getElementById('btn-bfs').style.display='';
     document.getElementById('btn-astar').style.display='none';
     document.getElementById('btn-race').style.display='none';
+    document.getElementById('btn-sback').style.display='';
     document.getElementById('health-row').style.display='flex';
     resetHealth('h');
     initCanvas(document.getElementById('cv'));
@@ -1251,6 +1282,7 @@ function csNext(){
     document.getElementById('btn-bfs').style.display='none';
     document.getElementById('btn-astar').style.display='';
     document.getElementById('btn-race').style.display='none';
+    document.getElementById('btn-sback').style.display='';
     document.getElementById('health-row').style.display='flex';
     resetHealth('h');
     redraw();
@@ -1263,6 +1295,49 @@ function csNext(){
   } else if(csIdx===9){
     // After Ch5 → Race
     goRace();
+  }
+}
+
+function csBack(){
+  if(csIdx<=0){showScr('scr-title');return;}
+  csIdx--;
+  stopAnim();
+  document.getElementById('btn-snext').style.display='none';
+  document.getElementById('btn-sback').style.display='none';
+
+  if(csIdx===0){
+    showCS(0);
+  } else if(csIdx===1){
+    showCS(1);
+  } else if(csIdx===2){
+    showScr('game-screen');
+    document.getElementById('g-title').textContent="Timeline 1 — Hopper's Search";
+    document.getElementById('btn-bfs').style.display='';
+    document.getElementById('btn-astar').style.display='none';
+    document.getElementById('btn-race').style.display='none';
+    document.getElementById('btn-sback').style.display='';
+    document.getElementById('health-row').style.display='flex';
+    redraw();
+  } else if(csIdx===3){
+    showGhostDustin();
+  } else if(csIdx===4){
+    showCS(2);
+  } else if(csIdx===5){
+    showCS(3);
+  } else if(csIdx===6){
+    clearVis();
+    showScr('game-screen');
+    document.getElementById('g-title').textContent="Timeline 2 — Eleven's Search";
+    document.getElementById('btn-bfs').style.display='none';
+    document.getElementById('btn-astar').style.display='';
+    document.getElementById('btn-race').style.display='none';
+    document.getElementById('btn-sback').style.display='';
+    document.getElementById('health-row').style.display='flex';
+    redraw();
+  } else if(csIdx===7){
+    showAliveDustin();
+  } else if(csIdx===8){
+    showCS(4);
   }
 }
 
