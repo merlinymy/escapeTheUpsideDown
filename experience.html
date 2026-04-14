@@ -56,8 +56,9 @@ body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospa
 .cs-text .g{color:var(--gold);text-shadow:0 0 8px rgba(255,215,0,.3)}
 .cs-text .dead{color:#ff4444;text-shadow:0 0 12px rgba(255,0,0,.5);font-weight:bold}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.cs-next{margin-top:24px;font-size:.75rem;color:var(--dim);letter-spacing:2px;cursor:pointer;transition:all .2s;opacity:.5;position:relative;z-index:2}
-.cs-next:hover{color:var(--red);opacity:1}
+.cs-next{margin-top:24px;font-size:.75rem;color:var(--dim);letter-spacing:2px;cursor:pointer;animation:pulse 2s infinite}
+.cs-next:hover{color:var(--red)}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
 
 /* ── Chapter images ── */
 .cs-img-wrap{opacity:0;animation:fadeUp 1.6s .4s forwards}
@@ -69,11 +70,15 @@ body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospa
 .cs-img.glow-gold{box-shadow:0 8px 40px rgba(255,215,0,.35),0 0 80px rgba(255,215,0,.12)}
 
 @media(max-width:768px){
+  .cs-body{overflow-y:auto;flex:1 1 0;align-items:flex-start}
   .cs-body.has-img{flex-direction:column}
   .cs-body.has-img .cs-img-wrap{flex:none;max-width:100%;width:100%;height:auto;max-height:35vh;padding:12px}
   .cs-body.has-img .cs-text-col{flex:none;max-width:100%;padding:12px 16px;text-align:center}
+  .cs-body:not(.has-img) .cs-text-col{max-width:100%;padding:16px}
   .cs-text{font-size:.9rem !important;line-height:1.7}
   .cs-label{margin-bottom:12px}
+
+  /* Game screen */
   #game-screen{padding:6px 8px;gap:3px}
   .top-bar{gap:4px}
   .game-title{font-size:1rem}
@@ -89,9 +94,14 @@ body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospa
   .health-label{font-size:.58rem;letter-spacing:1px}
   .health-val{font-size:.62rem;min-width:36px}
   .health-status{font-size:.5rem;padding:1px 5px}
+
+  /* Race screen */
   .race-health{gap:8px}
   .race-health-col{min-width:140px}
   .grid-label{font-size:.6rem}
+
+  /* Dustin screens */
+  .dustin-screen::before,.dustin-screen::after{flex:0;min-height:0}
   .dustin-panel{padding:0 12px}
   .dustin-header{gap:12px;margin-bottom:14px}
   .dustin-avatar{width:56px;height:56px}
@@ -100,20 +110,25 @@ body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospa
   .explain-body{font-size:.85rem !important}
   .explain-body .code-box{font-size:.68rem;padding:10px 12px;line-height:1.5}
   .explain-body .key-point{font-size:.68rem;padding:8px 12px}
+
+  /* Results */
   .res-row{gap:16px}
   .rc{padding:16px 18px;min-width:140px}
   .rn{font-size:1.8rem}
   .quote{padding:12px 16px}
   .quote em{font-size:.85rem}
+
+  /* Title */
   .title-main{font-size:clamp(1.8rem,8vw,3rem) !important}
   .title-sub{font-size:.7rem;margin-bottom:28px}
+
+  /* Let screens scroll instead of clipping */
+  .screen::before,.screen::after{flex:0 0 auto;min-height:12px}
 }
 
 .dustin-portrait{width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:center 20%}
 .dustin-portrait.ghost-p{border:2px solid rgba(33,150,243,.25);box-shadow:0 0 25px rgba(33,150,243,.15);opacity:.75;filter:saturate(.3) brightness(1.2)}
 .dustin-portrait.alive-p{border:2px solid rgba(255,215,0,.3);box-shadow:0 0 25px rgba(255,215,0,.2)}
-
-@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
 
 /* ── Dustin Explains ── */
 .dustin-screen{display:none;flex:1;flex-direction:column;align-items:center;position:relative;z-index:10;overflow-y:auto;padding:20px 0}
@@ -146,8 +161,8 @@ body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospa
 .explain-body .key-point.bfs-point{background:rgba(33,150,243,.06);border:1px solid rgba(33,150,243,.15)}
 .explain-body .key-point.astar-point{background:rgba(206,106,255,.06);border:1px solid rgba(206,106,255,.15)}
 
-.dustin-next{margin-top:28px;text-align:center;font-size:.75rem;color:var(--dim);letter-spacing:2px;cursor:pointer;transition:all .2s;opacity:.5}
-.dustin-next:hover{color:var(--red);opacity:1}
+.dustin-next{margin-top:28px;text-align:center;font-size:.75rem;color:var(--dim);letter-spacing:2px;cursor:pointer;animation:pulse 2s infinite}
+.dustin-next:hover{color:var(--red)}
 
 @keyframes ghostFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .ghost-float{animation:ghostFloat 3s ease-in-out infinite}
@@ -244,7 +259,7 @@ canvas{display:block;border:1px solid rgba(139,0,0,.2);box-shadow:0 0 25px rgba(
     <div class="cs-img-wrap" id="cs-img-wrap"></div>
     <div class="cs-text-col">
       <div class="cs-text" id="cs-text"></div>
-      <div class="cs-next" onclick="csNext()">Next ▸</div>
+      <div class="cs-next" onclick="csNext()">[ Press to continue ]</div>
     </div>
   </div>
 </div>
@@ -260,7 +275,7 @@ canvas{display:block;border:1px solid rgba(139,0,0,.2);box-shadow:0 0 25px rgba(
       </div>
     </div>
     <div class="explain-body" id="ghost-dustin-text"></div>
-    <div class="dustin-next" onclick="csNext()">Next ▸</div>
+    <div class="dustin-next" onclick="csNext()">[ Press to continue ]</div>
   </div>
 </div>
 
@@ -275,7 +290,7 @@ canvas{display:block;border:1px solid rgba(139,0,0,.2);box-shadow:0 0 25px rgba(
       </div>
     </div>
     <div class="explain-body" id="alive-dustin-text"></div>
-    <div class="dustin-next" onclick="csNext()">Next ▸</div>
+    <div class="dustin-next" onclick="csNext()">[ Press to continue ]</div>
   </div>
 </div>
 
@@ -305,7 +320,7 @@ canvas{display:block;border:1px solid rgba(139,0,0,.2);box-shadow:0 0 25px rgba(
       </select>
       <button class="btn sm" onclick="clearWalls()">Clear Walls</button>
       <button class="btn sm" onclick="clearVis()">Clear Search</button>
-      <div class="spd"><span>Speed</span><input type="range" id="spd" min="1" max="30" value="8"></div>
+      <div class="spd"><span>Speed</span><input type="range" id="spd" min="1" max="30" value="1"></div>
     </div>
   </div>
 
@@ -358,7 +373,7 @@ canvas{display:block;border:1px solid rgba(139,0,0,.2);box-shadow:0 0 25px rgba(
     <div class="grid-box"><div class="grid-label al">Timeline 2 — Eleven (A*)</div><canvas id="cv-astar"></canvas></div>
   </div>
   <div class="btn-row">
-    <div class="spd"><span>Speed</span><input type="range" id="spd-r" min="1" max="30" value="8"></div>
+    <div class="spd"><span>Speed</span><input type="range" id="spd-r" min="1" max="30" value="1"></div>
     <button class="btn go" id="btn-gor" onclick="runRace()">Race!</button>
     <button class="btn sm" onclick="backFromRace()">← Back</button>
   </div>
@@ -400,7 +415,7 @@ const COLS=40, ROWS=25, CELL=22, W=COLS*CELL, H=ROWS*CELL;
 let grid=[], sPos={r:20,c:3}, ePos={r:3,c:36};
 let vis=null, expCells=[], pathCells=[], lastType=null;
 let animId=null, story=false, csIdx=0, racing=false;
-let curGVals=null, curHFn=null, curOpenedAt=null; // g-values grid, h function, and opened-at step for current search
+let curGVals=null, curHFn=null, curOpenedAt=null;
 
 // Story state
 let storyBfsExp=0, storyBfsPath=0;
@@ -555,26 +570,20 @@ function drawOn(ctx,cW,cH,explored,path,type,aIdx,gVals,hFn,openedAt){
   const isA=type==='astar',ec=isA?'206,106,255':'33,150,243';
   const lim=aIdx!==undefined?aIdx:explored.length;
 
-  // Build set of explored cell keys for quick lookup
   const exploredSet=new Set();
-  for(let i=0;i<Math.min(lim,explored.length);i++){
-    const{r,c}=explored[i];
-    exploredSet.add(r*COLS+c);
-  }
+  for(let i=0;i<Math.min(lim,explored.length);i++) exploredSet.add(explored[i].r*COLS+explored[i].c);
 
-  // Draw neighbor cells (in open list but not yet explored) with dim highlight for A*
-  if(isA&&openedAt&&gVals&&hFn){
+  if(openedAt&&gVals&&hFn){
     const curStep=lim-1;
     for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
-      if(openedAt[r][c]>=0&&openedAt[r][c]<=curStep&&!exploredSet.has(r*COLS+c)&&gVals[r][c]!==Infinity){
+      if(openedAt[r][c]>=0&&openedAt[r][c]<=curStep&&!exploredSet.has(r*COLS+c)&&(isA?gVals[r][c]!==Infinity:gVals[r][c]>=0)){
         const x=c*CELL,y=r*CELL;
-        ctx.fillStyle='rgba(206,106,255,0.06)';ctx.fillRect(x+1,y+1,CELL-2,CELL-2);
-        ctx.strokeStyle='rgba(206,106,255,0.15)';ctx.lineWidth=0.5;ctx.strokeRect(x+1,y+1,CELL-2,CELL-2);
+        ctx.fillStyle=`rgba(${ec},0.06)`;ctx.fillRect(x+1,y+1,CELL-2,CELL-2);
+        ctx.strokeStyle=`rgba(${ec},0.15)`;ctx.lineWidth=0.5;ctx.strokeRect(x+1,y+1,CELL-2,CELL-2);
       }
     }
   }
 
-  // Draw explored cells
   for(let i=0;i<Math.min(lim,explored.length);i++){
     const{r,c}=explored[i],x=c*CELL,y=r*CELL;
     const a=.1+.28*(i/Math.max(explored.length,1));
@@ -582,42 +591,32 @@ function drawOn(ctx,cW,cH,explored,path,type,aIdx,gVals,hFn,openedAt){
     if(aIdx!==undefined&&i>=lim-3){ctx.fillStyle=`rgba(${ec},0.4)`;ctx.fillRect(x+1,y+1,CELL-2,CELL-2);}
   }
 
-  // Draw g/h/f values (A* only)
   if(gVals&&hFn&&isA){
     ctx.textBaseline='top';
     const curStep=lim-1;
-
-    // Neighbor cells (open list, not yet explored) — dim values
     if(openedAt){
       for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
         if(openedAt[r][c]>=0&&openedAt[r][c]<=curStep&&!exploredSet.has(r*COLS+c)&&gVals[r][c]!==Infinity){
-          const x=c*CELL,y=r*CELL;
-          const gv=gVals[r][c],hv=hFn(r,c),fv=gv+hv;
+          const x=c*CELL,y=r*CELL,gv=gVals[r][c],hv=hFn(r,c),fv=gv+hv;
           ctx.font='bold 6px monospace';ctx.fillStyle='rgba(206,106,255,0.3)';
           ctx.textAlign='left';ctx.fillText(gv,x+2,y+1);
           ctx.textAlign='right';ctx.fillText(hv,x+CELL-2,y+1);
           ctx.font='bold 8px monospace';ctx.fillStyle='rgba(255,215,0,0.35)';
-          ctx.textAlign='center';ctx.textBaseline='middle';
-          ctx.fillText(fv,x+CELL/2,y+CELL/2+1);
+          ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(fv,x+CELL/2,y+CELL/2+1);
           ctx.textBaseline='top';
         }
       }
     }
-
-    // Explored cells — bright values
-    const numColor='rgba(206,106,255,0.7)';
-    const fColor='rgba(255,215,0,0.85)';
+    const numColor='rgba(206,106,255,0.7)',fColor='rgba(255,215,0,0.85)';
     for(let i=0;i<Math.min(lim,explored.length);i++){
-      const{r,c}=explored[i],x=c*CELL,y=r*CELL;
-      const gv=gVals[r][c];
+      const{r,c}=explored[i],x=c*CELL,y=r*CELL,gv=gVals[r][c];
       if(gv===Infinity)continue;
       const hv=hFn(r,c),fv=gv+hv;
       ctx.font='bold 6px monospace';ctx.fillStyle=numColor;
       ctx.textAlign='left';ctx.fillText(gv,x+2,y+1);
       ctx.textAlign='right';ctx.fillText(hv,x+CELL-2,y+1);
       ctx.font='bold 8px monospace';ctx.fillStyle=fColor;
-      ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillText(fv,x+CELL/2,y+CELL/2+1);
+      ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(fv,x+CELL/2,y+CELL/2+1);
       ctx.textBaseline='top';
     }
   }
@@ -629,14 +628,12 @@ function drawOn(ctx,cW,cH,explored,path,type,aIdx,gVals,hFn,openedAt){
     ctx.shadowBlur=0;
   }
 
-  // Start node
   ctx.fillStyle='#00e676';ctx.shadowColor='#00e676';ctx.shadowBlur=14;
   ctx.beginPath();ctx.arc(sPos.c*CELL+CELL/2,sPos.r*CELL+CELL/2,CELL/2.5,0,Math.PI*2);ctx.fill();
   ctx.shadowBlur=0;ctx.font='bold 8px monospace';ctx.fillStyle='#00e676';
   ctx.textAlign='left';ctx.textBaseline='top';
   ctx.fillText('START',sPos.c*CELL,sPos.r*CELL-3);
 
-  // End node
   ctx.fillStyle='#ffd700';ctx.shadowColor='#ffd700';ctx.shadowBlur=14;
   ctx.beginPath();ctx.arc(ePos.c*CELL+CELL/2,ePos.r*CELL+CELL/2,CELL/2.5,0,Math.PI*2);ctx.fill();
   ctx.shadowBlur=0;ctx.font='bold 8px monospace';ctx.fillStyle='#ffd700';
@@ -715,9 +712,7 @@ function sizeCanvas(cv){
   const availW=gridArea.clientWidth-16;
   const availH=gridArea.clientHeight-16;
   const aspect=H/W;
-  // Fit to available space, maintaining aspect ratio
-  let w=availW;
-  let h=w*aspect;
+  let w=availW;let h=w*aspect;
   if(h>availH){h=availH;w=h/aspect;}
   cv.style.width=Math.floor(w)+'px';
   cv.style.height=Math.floor(h)+'px';
@@ -732,21 +727,22 @@ function doBFS(){
   const exp=[],visited=Array.from({length:ROWS},()=>Array(COLS).fill(false));
   const par=Array.from({length:ROWS},()=>Array(COLS).fill(null));
   const gVals=Array.from({length:ROWS},()=>Array(COLS).fill(-1));
+  const openedAt=Array.from({length:ROWS},()=>Array(COLS).fill(-1));
   const hFn=(r,c)=>Math.abs(r-ePos.r)+Math.abs(c-ePos.c);
-  const q=[{r:sPos.r,c:sPos.c}];visited[sPos.r][sPos.c]=true;gVals[sPos.r][sPos.c]=0;
+  const q=[{r:sPos.r,c:sPos.c}];visited[sPos.r][sPos.c]=true;gVals[sPos.r][sPos.c]=0;openedAt[sPos.r][sPos.c]=0;
   while(q.length){
     const u=q.shift();exp.push(u);
     if(u.r===ePos.r&&u.c===ePos.c)break;
     for(const[dr,dc]of DIRS){const nr=u.r+dr,nc=u.c+dc;
       if(nr>=0&&nr<ROWS&&nc>=0&&nc<COLS&&!visited[nr][nc]&&grid[nr][nc]===0){
-        visited[nr][nc]=true;par[nr][nc]={r:u.r,c:u.c};gVals[nr][nc]=gVals[u.r][u.c]+1;q.push({r:nr,c:nc});}}
+        visited[nr][nc]=true;par[nr][nc]={r:u.r,c:u.c};gVals[nr][nc]=gVals[u.r][u.c]+1;openedAt[nr][nc]=exp.length-1;q.push({r:nr,c:nc});}}
   }
   const path=[];
-  if(!visited[ePos.r][ePos.c])return{explored:exp,path:[],gVals,hFn};
+  if(!visited[ePos.r][ePos.c])return{explored:exp,path:[],gVals,hFn,openedAt};
   let u={r:ePos.r,c:ePos.c};
   while(u&&!(u.r===sPos.r&&u.c===sPos.c)){path.unshift(u);u=par[u.r][u.c];}
   path.unshift({r:sPos.r,c:sPos.c});
-  return{explored:exp,path,gVals,hFn};
+  return{explored:exp,path,gVals,hFn,openedAt};
 }
 
 // Min-heap for A* open list (matches PathFinding.js behavior)
@@ -764,7 +760,6 @@ function doAStar(){
   const f=Array.from({length:ROWS},()=>Array(COLS).fill(Infinity));
   const par=Array.from({length:ROWS},()=>Array(COLS).fill(null));
   const cl=Array.from({length:ROWS},()=>Array(COLS).fill(false));
-  // Track which step each cell was opened (added to open list)
   const openedAt=Array.from({length:ROWS},()=>Array(COLS).fill(-1));
   const hFn=(r,c)=>Math.abs(r-ePos.r)+Math.abs(c-ePos.c);
   g[sPos.r][sPos.c]=0;f[sPos.r][sPos.c]=hFn(sPos.r,sPos.c);
@@ -779,7 +774,7 @@ function doAStar(){
       if(nr>=0&&nr<ROWS&&nc>=0&&nc<COLS&&!cl[nr][nc]&&grid[nr][nc]===0){
         const tg=g[u.r][u.c]+1;
         if(tg<g[nr][nc]){g[nr][nc]=tg;f[nr][nc]=tg+hFn(nr,nc);par[nr][nc]={r:u.r,c:u.c};
-          openedAt[nr][nc]=exp.length-1; // mark which step opened this neighbor
+          openedAt[nr][nc]=exp.length-1;
           open.push({r:nr,c:nc,f:f[nr][nc]});}}}
   }
   const path=[];
@@ -810,9 +805,7 @@ function animate(ctx,cW,cH,explored,path,type,opts){
   function step(now){
     const spd=parseInt(document.getElementById(spdId||'spd').value);
     const dt=now-lastTime;lastTime=now;
-
-    // cells per second: speed 1 = 1 cps, speed 30 = 300 cps
-    const cps = spd<=1 ? 1 : spd*10;
+    const cps=spd<=1?1:spd*10;
     accum+=dt*cps/1000;
     const advance=Math.floor(accum);
     if(advance>0){
@@ -822,7 +815,6 @@ function animate(ctx,cW,cH,explored,path,type,opts){
       drawOn(ctx,cW,cH,explored,idx>=explored.length?path:null,type,idx,gVals,hFn,openedAt);
       updStats(idx,idx>=explored.length?path.length:'—');
 
-      // Health drain
       if(healthPrefix&&drainRate){
         const hp=Math.max(0,100-idx*drainRate);
         if(hp<=0&&!dead){dead=true;setHealth(healthPrefix,0,true);}
@@ -940,7 +932,7 @@ function runRace(){
 
     if(!bd){
       bi=Math.min(bi+advance,bR.explored.length);
-      drawOn(ctxB,cvB.width,cvB.height,bR.explored,bi>=bR.explored.length?bR.path:null,'bfs',bi,bR.gVals,bR.hFn,null);
+      drawOn(ctxB,cvB.width,cvB.height,bR.explored,bi>=bR.explored.length?bR.path:null,'bfs',bi,bR.gVals,bR.hFn,bR.openedAt);
       document.getElementById('r-bfs').textContent=bi;
       const bhp=Math.max(0,100-bi*drain);
       if(bhp<=0&&!bDead){bDead=true;setHealth('rh-bfs',0,true);}
@@ -1031,40 +1023,70 @@ const CS=[
   {l:'Chapter 1 — The Gate Opens',
    img:'ch1.jpg', imgClass:'glow-red', imgAlt:'Dustin pulled into the Upside Down',
    t:`November 1984. <span class="r">Hawkins, Indiana</span>.<br><br>
-A gate to the Upside Down pulls <span class="g">Dustin</span> through.
-<span class="v">Eleven</span> can still feel him — a faint pulse, fading.<br><br>
+A new gate to the Upside Down rips open beneath Hawkins Middle School.
+The <span class="r">Mind Flayer</span> pulls <span class="g">Dustin</span> straight through.<br><br>
+His walkie-talkie crackles once — then silence.
+But <span class="v">Eleven</span> can still feel him.
+A faint pulse, fading, somewhere deep in the dark mirror of Hawkins.<br><br>
 He won't last long.`},
 
   // 1: Ch2 — Hopper's Plan
-  {l:'Chapter 2 — Hopper\'s Plan (BFS)',
+  {l:'Chapter 2 — Hopper\'s Plan',
    img:'ch2.jpg', imgClass:'glow-blue', imgAlt:'Hopper, Steve, Nancy, Joyce and Jonathan planning',
-   t:`Hopper's plan: <span class="b">"Every street, every alley. Block by block."</span><br><br>
-This is <span class="b">Breadth-First Search</span> — systematic, but <em>blind</em>.`},
+   t:`Chief Hopper stares at the map spread across Joyce Byers' kitchen table.<br><br>
+"We go in. <span class="b">Every street, every alley</span>. Systematic. Block by block. We don't skip anything."<br><br>
+Steve grips his nail bat. "And if he runs out of time?"<br><br>
+"Then we move faster."<br><br>
+But speed isn't Hopper's problem. <em>Direction</em> is.
+He's about to search everywhere — even the places Dustin couldn't possibly be.<br><br>
+This is <span class="b">Breadth-First Search</span>.<br><br>
+<em>Draw walls to shape the Upside Down, then click Run BFS.<br>Watch Dustin's health bar.</em>`},
 
   // 2: Ch3 — Too Late
   {l:'Chapter 3 — Too Late',
    img:'ch3.jpg', imgClass:'glow-dred', imgAlt:'Hopper finds Dustin cocooned in vines',
-   t:`<span class="b">{BFS_COUNT}</span> intersections explored.
-He found the shortest path.<br><br>
-But the shortest path doesn't matter if you <span class="dead">take too long to find it</span>.<br><br>
-<em>"I can fix this. I can go back."</em>`},
+   t:`Hopper reaches the coordinates. He finds Dustin slumped against the wall behind the library, <span class="dead">completely cocooned in vines. No pulse.</span><br><br>
+He explored <span class="b">{BFS_COUNT}</span> intersections.
+Searched every corner of the Upside Down.
+Found every dead end, fought every Demodog, cleared every block.<br><br>
+He found the shortest path. But the shortest path doesn't matter if you <span class="dead">take too long to find it</span>.<br><br>
+Back in Joyce's living room, Eleven is screaming.
+Blood streams from her nose. The ground shakes.<br><br>
+<em>"I can fix this," she whispers. "I can go back."</em>`},
 
-  // 3: Ch4 — Eleven's Approach (A*)
-  {l:'Chapter 4 — Eleven\'s Approach (A*)',
+  // 3: Ch4 — The Void Between Seconds
+  {l:'Chapter 4 — The Void Between Seconds',
    img:'ch4.jpg', imgClass:'glow-purple', imgAlt:'Eleven reaching through the Void with psychic power',
-   t:`Eleven rewinds time. Same maze. Same Dustin.<br><br>
-This time, she can <em>feel</em> his <span class="v">direction</span> and <span class="v">distance</span>.<br><br>
+   t:`<span class="v">Eleven</span> reaches into the Void — not across space, but across <em>time</em>.
+She finds the moment before Hopper entered the gate, grabs it, and <span class="v">pulls</span>.<br><br>
+Reality rewinds. The vines uncurl. Dustin gasps. The clock resets.<br><br>
+This time, Eleven goes in alone.<br><br>
+She doesn't need to check every block. She can <em>feel</em> Dustin — not his exact location,
+but his <span class="v">direction</span> and a rough sense of <span class="v">how far away he is</span>.
+A compass in her mind that never stops pulling.<br><br>
+At every intersection, she calculates:<br>
 <span class="v">f(n) = g(n) + h(n)</span><br>
-Distance traveled + psychic estimate remaining.<br><br>
-This is <span class="v">A* Search</span>.`},
+Distance already traveled + her psychic estimate of distance remaining.<br>
+She always takes the path with the <em>smallest total</em>.<br><br>
+This is <span class="v">A* Search</span>. Same maze. Same start. Same Dustin.<br>
+But this time, she knows which way to lean.<br><br>
+<em>Click Run A* — save Dustin before his health runs out.</em>`},
 
-  // 4: Ch5 — Same Path, Fewer Nodes
-  {l:'Chapter 5 — Same Path, Fewer Nodes',
+  // 4: Ch5 — The Kitchen
+  {l:'Chapter 5 — The Kitchen',
    img:'ch5.png', imgClass:'glow-gold', imgAlt:'The whole group reunited safely in the kitchen',
-   t:`BFS: <span class="b">{BFS_COUNT}</span> nodes explored. <span class="dead">Dustin: dead.</span><br>
-A*: <span class="v">{ASTAR_COUNT}</span> nodes explored. <span class="g" style="color:var(--green)">Dustin: alive.</span><br><br>
-Same shortest path. The only difference was the <span class="v">heuristic</span>.<br><br>
-<em>"My brain is an admissible heuristic."</em> — Eleven`},
+   t:`Dustin is wrapped in a blanket. Alive. Shaking, but alive.<br><br>
+"How?" Hopper asks. He doesn't remember the first timeline. Nobody does. Except El.<br><br>
+Dustin — because he's Dustin — figures it out from the look on her face.<br><br>
+"You went back," he says. "And you did it differently."<br><br>
+"In the first timeline, Hopper ran <span class="b">BFS</span>.
+Explored <span class="b">{BFS_COUNT}</span> nodes. Found the shortest path — but I was already gone."<br><br>
+"In the second timeline, you ran <span class="v">A-star</span>.
+Explored <span class="v">{ASTAR_COUNT}</span> nodes. Same shortest path — but you got there while I was still breathing."<br><br>
+"Same answer. Same maze. The only difference was the <span class="v">heuristic</span> — your psychic sense telling you which direction I was."<br><br>
+Eleven stares at him. <em>"My brain is an admissible heuristic."</em><br><br>
+"...have you been reading my textbooks?"<br><br>
+<em>Let's see both timelines side by side.</em>`},
 ];
 
 function beginStory(){
@@ -1081,7 +1103,6 @@ function showCS(i){
   const imgWrap=document.getElementById('cs-img-wrap');
   const el=document.getElementById('cs-text');
 
-  // Image
   if(CS[i].img){
     body.classList.add('has-img');
     imgWrap.innerHTML=`<img class="cs-img ${CS[i].imgClass||''}" src="${CS[i].img}" alt="${CS[i].imgAlt||''}" data-tilt>`;
@@ -1098,7 +1119,6 @@ function showCS(i){
   txt=txt.replace(/\{ASTAR_HEALTH\}/g, storyAstarHealth||'??');
   el.innerHTML=txt;
 
-  // Re-trigger animations
   [el,imgWrap].forEach(e=>{e.style.animation='none';e.offsetHeight;e.style.animation='';});
 }
 
@@ -1106,6 +1126,11 @@ function showGhostDustin(){
   showScr('scr-ghost-dustin');
   const el=document.getElementById('ghost-dustin-text');
   el.innerHTML=`
+    <div class="speech">"So... I'm dead. <span class="hl-r">Cool cool cool cool cool.</span> No doubt no doubt."</div>
+    <div class="speech">"But hey, at least I can explain <em>why</em> Hopper was too slow. You know what he used? <span class="hl-b">Breadth-First Search</span>. Let me break it down."</div>
+
+    <div class="speech">"BFS uses a <span class="hl-b">queue</span> — first in, first out. It starts at the entrance and explores <em>every single neighbor</em> before moving deeper. Layer by layer, like ripples in a pond."</div>
+
     <div class="code-box bfs-code">
 <span class="hl-b">queue</span> = [start]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-g">// FIFO — first in, first out</span><br>
 visited = {start}<br><br>
@@ -1118,14 +1143,17 @@ visited = {start}<br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue.<span class="hl-b">enqueue</span>(neighbor)
     </div>
 
+    <div class="speech">"See the problem? BFS has <span class="hl-r">no sense of direction</span>. It doesn't know that I'm to the upper-right. It just expands outward uniformly — north, south, east, west — treating every direction as equally promising."</div>
+
     <div class="key-point bfs-point">
-      <span class="hl-b">✦ Data structure:</span> Queue (FIFO) — explores layer by layer<br>
-      <span class="hl-b">✦ Guarantees</span> shortest path on unweighted graphs<br>
-      <span class="hl-r">✦ Blind search</span> — no sense of direction, explores <em>all</em> directions equally<br>
-      <span class="hl-b">✦ Time complexity:</span> O(V + E)<br>
-      <span class="hl-r">✦ Result: ${storyBfsExp||'??'} nodes explored</span> — Dustin is dead
+      <span class="hl-b">✦ Guarantees</span> the shortest path (on unweighted graphs)<br>
+      <span class="hl-r">✦ Explores ${storyBfsExp||'??'} nodes</span> — checks everything, everywhere, all at once<br>
+      <span class="hl-b">✦ Time complexity:</span> O(V + E) where V = vertices, E = edges
     </div>
 
+    <div class="speech">"Hopper searched <span class="hl-b">${storyBfsExp||'??'} intersections</span>. He found the shortest path. But by the time he got to me... <span class="hl-r">I was already gone.</span>"</div>
+
+    <div class="speech">"The shortest path doesn't matter if finding it takes too long. BFS is <em>complete</em> and <em>optimal</em> — but it's <span class="hl-r">blind</span>. It has no idea which direction to prioritize."</div>
   `;
   el.closest('.dustin-panel').style.animation='none';
   el.closest('.dustin-panel').offsetHeight;
@@ -1137,12 +1165,18 @@ function showAliveDustin(){
   const el=document.getElementById('alive-dustin-text');
   const saved=storyAstarHealth||'??';
   el.innerHTML=`
-    <div class="key-point astar-point" style="margin-top:0">
-      <span class="hl-v">f(n) = g(n) + h(n)</span><br><br>
-      <span class="hl-v">g(n)</span> = actual distance from start to n<br>
-      <span class="hl-y">h(n)</span> = estimated distance from n to goal — <span class="hl-y">Manhattan distance: |Δrow| + |Δcol|</span><br>
-      <span class="hl-v">f(n)</span> = total estimated cost through n
+    <div class="speech">"I'M ALIVE! I'm alive and I understand <span class="hl-v">heuristic search</span>! Best day ever."</div>
+    <div class="speech">"Okay so — Eleven used <span class="hl-v">A* Search</span>. Same maze, same start, same me. But instead of exploring blindly, she had a <em>psychic compass</em> pointing toward me. In algorithm terms, that compass is the <span class="hl-v">heuristic function h(n)</span>."</div>
+
+    <div class="speech">"A* evaluates every node with a score: <span class="hl-v">f(n) = g(n) + h(n)</span>"</div>
+
+    <div class="key-point astar-point">
+      <span class="hl-v">g(n)</span> = actual distance traveled from start to node n<br>
+      <span class="hl-v">h(n)</span> = <em>estimated</em> distance from node n to goal (<span class="hl-y">Manhattan distance</span>)<br>
+      <span class="hl-v">f(n)</span> = total estimated cost of the path through n
     </div>
+
+    <div class="speech">"Instead of a regular queue, A* uses a <span class="hl-v">priority queue</span> — it always expands the node with the <em>lowest f(n)</em> first. That means it naturally moves toward the goal."</div>
 
     <div class="code-box astar-code">
 <span class="hl-v">priority_queue</span> = [(f(start), start)]<br>
@@ -1157,18 +1191,23 @@ visited = {}<br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;new_g = g[node] + 1<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-v">if</span> new_g < g[neighbor]:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g[neighbor] = new_g<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f = new_g + <span class="hl-y">h(neighbor)</span>&nbsp;<span class="hl-g">// heuristic guides search</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f = new_g + <span class="hl-y">h(neighbor)</span>&nbsp;<span class="hl-g">// the magic!</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority_queue.<span class="hl-v">push</span>((f, neighbor))
     </div>
 
+    <div class="speech">"The heuristic Eleven uses is <span class="hl-y">Manhattan distance</span>: |row₁ − row₂| + |col₁ − col₂|. Since we can only move in four directions (no diagonals), this <em>never overestimates</em> the true distance. That makes it <span class="hl-v">admissible</span> — which guarantees A* finds the optimal path."</div>
+
     <div class="key-point astar-point">
-      <span class="hl-v">✦ Data structure:</span> Priority queue (min-heap) — expands most promising node first<br>
-      <span class="hl-v">✦ Guarantees</span> shortest path when h(n) is <span class="hl-v">admissible</span> (never overestimates)<br>
-      <span class="hl-y">✦ Manhattan distance</span> is admissible for 4-directional grids<br>
-      <span class="hl-v">✦ Key difference from BFS:</span> informed search — knows which direction to prioritize<br>
-      <span class="hl-g">✦ Result: ${storyAstarExp||'??'} nodes explored</span> — Dustin saved at ${saved}% health
+      <span class="hl-v">✦ Also guarantees</span> the shortest path (with admissible heuristic)<br>
+      <span class="hl-g">✦ Explored only ${storyAstarExp||'??'} nodes</span> — health remaining: <span class="hl-g">${saved}%</span><br>
+      <span class="hl-v">✦ Same answer as BFS</span>, but skips nodes that "feel" far from the goal
     </div>
 
+    <div class="speech">"Hopper's BFS explored <span class="hl-b">${storyBfsExp||'??'}</span> nodes. Eleven's A* explored <span class="hl-v">${storyAstarExp||'??'}</span>. Same shortest path. But A* got there with <span class="hl-g">${saved}% of my health left</span>."</div>
+
+    <div class="speech">"That's the whole point: <span class="hl-v">A* doesn't find a better path — it finds the same path faster</span>, because the heuristic tells it which direction to look. BFS is a <span class="hl-b">blind</span> search. A* is an <span class="hl-v">informed</span> search."</div>
+
+    <div class="speech">"Or as Eleven put it: <em>'My brain is an admissible heuristic.'</em> ...she's been reading my textbooks."</div>
   `;
   el.closest('.dustin-panel').style.animation='none';
   el.closest('.dustin-panel').offsetHeight;
@@ -1242,7 +1281,7 @@ window.addEventListener('resize',()=>{
   const maxTilt=12, idleAmp=2.5, idleSpeed=0.0008;
   let mouseActive=false, mouseTimer=null;
   let targetRx=0, targetRy=0, curRx=0, curRy=0;
-  const lerp=0.07; // smoothing factor
+  const lerp=0.07;
 
   document.addEventListener('mousemove',e=>{
     mouseActive=true;
@@ -1261,21 +1300,16 @@ window.addEventListener('resize',()=>{
     targetRy=(t.clientX/window.innerWidth-0.5)*-maxTilt;
   },{passive:true});
 
-  document.addEventListener('touchend',()=>{
-    mouseActive=false;
-  });
+  document.addEventListener('touchend',()=>{mouseActive=false;});
 
   function tick(){
     const t=Date.now()*idleSpeed;
-    // Idle wobble target when mouse is not active
     if(!mouseActive){
       targetRx=Math.sin(t*1.1)*idleAmp;
       targetRy=Math.sin(t*0.7)*idleAmp;
     }
-    // Smooth interpolation
     curRx+=(targetRx-curRx)*lerp;
     curRy+=(targetRy-curRy)*lerp;
-    // Apply to all tilt images
     const imgs=document.querySelectorAll('[data-tilt]');
     if(imgs.length){
       const tf=`perspective(800px) rotateX(${curRx.toFixed(2)}deg) rotateY(${curRy.toFixed(2)}deg)`;
